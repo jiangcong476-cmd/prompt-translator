@@ -368,7 +368,7 @@ dialog::backdrop { background: rgba(11, 16, 32, .45); backdrop-filter: blur(3px)
 <dialog id="settingsDlg">
   <div class="dlg">
     <h3>模型设置</h3>
-    <p class="desc">默认走 DeepSeek。API Key 只存在本机；不勾「记住」时只留在内存，关掉程序就没了。</p>
+    <p class="desc">填你自己的 DeepSeek API Key。它只保存在这台设备的浏览器里，不会发送给任何人，也不经过任何服务器。</p>
     <div class="field">
       <label for="setBase">接口地址</label>
       <input type="text" id="setBase" placeholder="https://api.deepseek.com/v1">
@@ -381,7 +381,7 @@ dialog::backdrop { background: rgba(11, 16, 32, .45); backdrop-filter: blur(3px)
       <label for="setKey">API Key <button type="button" class="link-btn" id="btnClearKey" hidden>清除已保存的</button></label>
       <input type="password" id="setKey" placeholder="sk-…" autocomplete="off">
     </div>
-    <label class="check"><input type="checkbox" id="setRemember"> 记住密钥（写到本机 data/config.json）</label>
+    <label class="check" style="display:none"><input type="checkbox" id="setRemember"> 密钥只保存在本机浏览器，不上传</label>
     <div class="dlg-actions">
       <button class="ghost" type="button" id="btnTest">测试连接</button>
       <div class="grow"></div>
@@ -1480,6 +1480,22 @@ const themeParam = new URLSearchParams(location.search).get("theme");
 applyTheme(themeParam || localStorage.getItem("idea-theme") || "light");
 
 boot();
+</script>
+<script>
+(function () {
+  var desc = document.querySelector("#settingsDlg .desc");
+  if (desc) desc.textContent = "填你自己的 DeepSeek API Key。它只保存在这台设备的浏览器里，不会发送给任何人，也不会有任何服务器收到它。";
+  var box = document.getElementById("setRemember");
+  if (box) {
+    box.style.display = "none";
+    var label = box.closest("label");
+    if (label) {
+      Array.prototype.forEach.call(label.childNodes, function (node) {
+        if (node.nodeType === 3) node.textContent = " 密钥只保存在本机浏览器，不上传";
+      });
+    }
+  }
+})();
 </script>
 </body>
 </html>
